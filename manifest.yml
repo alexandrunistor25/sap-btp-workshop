@@ -1,0 +1,23 @@
+# Cloud Foundry deployment descriptor - read by `cf push`.
+#
+# ONE application contains everything: the CAP backend (OData service) and the
+# SAPUI5 frontend (static files from ./app). No MTA, no HANA, no XSUAA needed.
+---
+applications:
+  - name: pizzaflow
+    # Generates a unique public URL, e.g. https://pizzaflow-brave-fox-xy.cfapps.us10-001.hana.ondemand.com
+    random-route: true
+    # Exactly ONE instance: the in-memory SQLite database lives inside the
+    # instance, so a second instance would have its own, different data.
+    instances: 1
+    memory: 256M
+    disk_quota: 1G
+    buildpacks:
+      - nodejs_buildpack
+    # package.json -> "start": "cds-serve" (CAP's production server)
+    command: npm start
+    # Cloud Foundry restarts the app if GET /health does not answer
+    health-check-type: http
+    health-check-http-endpoint: /health
+    env:
+      NODE_ENV: production

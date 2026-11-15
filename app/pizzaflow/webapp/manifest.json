@@ -1,0 +1,133 @@
+{
+  "_version": "2.8.0",
+  "sap.app": {
+    "id": "pizzaflow",
+    "type": "application",
+    "i18n": {
+      "bundleName": "pizzaflow.i18n.i18n",
+      "supportedLocales": [""],
+      "fallbackLocale": ""
+    },
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/store/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "pizzaflow.view.App",
+      "type": "XML",
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.148.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {},
+        "sap.f": {},
+        "sap.tnt": {},
+        "sap.uxap": {},
+        "sap.ui.layout": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "pizzaflow.i18n.i18n",
+          "supportedLocales": [""],
+          "fallbackLocale": ""
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true,
+          "groupId": "$direct"
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "type": "View",
+        "viewType": "XML",
+        "path": "pizzaflow.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "bypassed": {
+          "target": "overview"
+        }
+      },
+      "routes": [
+        {
+          "name": "overview",
+          "pattern": "",
+          "target": "overview"
+        },
+        {
+          "name": "materials",
+          "pattern": "materials",
+          "target": "materials"
+        },
+        {
+          "name": "orders",
+          "pattern": "orders",
+          "target": "orders"
+        },
+        {
+          "name": "orderDetail",
+          "pattern": "orders/{orderId}",
+          "target": "orderDetail"
+        }
+      ],
+      "targets": {
+        "overview": {
+          "id": "overview",
+          "name": "Overview",
+          "level": 1
+        },
+        "materials": {
+          "id": "materials",
+          "name": "Materials",
+          "level": 1
+        },
+        "orders": {
+          "id": "orders",
+          "name": "Orders",
+          "level": 1
+        },
+        "orderDetail": {
+          "id": "orderDetail",
+          "name": "OrderDetail",
+          "level": 2
+        }
+      }
+    }
+  }
+}

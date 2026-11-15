@@ -1,0 +1,19 @@
+# UI5 Tooling configuration.
+# Not needed at runtime: CAP serves the ./webapp folder as static files and the
+# SAPUI5 runtime is loaded from the SAP CDN (see webapp/index.html).
+# It tells tools such as the UI5 linter which SAPUI5 version the app uses.
+specVersion: "4.0"
+metadata:
+  name: pizzaflow
+type: application
+framework:
+  name: SAPUI5
+  version: "1.148.13"
+  libraries:
+    - name: sap.m
+    - name: sap.f
+    - name: sap.tnt
+    - name: sap.uxap
+    - name: sap.ui.core
+    - name: sap.ui.layout
+    - name: themelib_sap_horizon

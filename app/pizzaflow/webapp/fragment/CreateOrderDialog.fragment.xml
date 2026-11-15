@@ -1,0 +1,70 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+  <!--
+    The order items being entered are transient UI state -> JSONModel "newOrder".
+    The list of pizzas in each Select comes from the OData model (/Pizzas).
+  -->
+  <Dialog id="createOrderDialog" title="{i18n>createOrderTitle}" contentWidth="40rem" stretch="{device>/system/phone}">
+    <content>
+      <MessageStrip
+        id="createOrderInfo"
+        text="{i18n>createOrderInfo}"
+        type="Information"
+        showIcon="true"
+        class="sapUiSmallMargin"
+      />
+      <Table
+        id="newOrderItemsTable"
+        ariaLabelledBy="newOrderItemsTitle"
+        items="{newOrder>/items}"
+        noDataText="{i18n>createOrderNoItems}"
+      >
+        <headerToolbar>
+          <OverflowToolbar id="newOrderItemsToolbar">
+            <Title id="newOrderItemsTitle" text="{i18n>createOrderItems}" level="H3" />
+            <ToolbarSpacer />
+            <Button id="addOrderItemButton" text="{i18n>addItem}" icon="sap-icon://add" press=".onAddOrderItem" />
+          </OverflowToolbar>
+        </headerToolbar>
+        <columns>
+          <Column id="newOrderPizzaColumn">
+            <Text text="{i18n>pizza}" />
+          </Column>
+          <Column id="newOrderQuantityColumn" width="10rem">
+            <Text text="{i18n>quantity}" />
+          </Column>
+          <Column id="newOrderRemoveColumn" width="3rem" hAlign="End" />
+        </columns>
+        <items>
+          <ColumnListItem>
+            <!-- $$sharedRequest: all Selects share ONE request for /Pizzas -->
+            <Select
+              selectedKey="{newOrder>pizzaID}"
+              forceSelection="false"
+              showSecondaryValues="true"
+              width="100%"
+              required="true"
+              valueState="{newOrder>valueState}"
+              valueStateText="{i18n>createOrderSelectPizza}"
+              change=".onOrderItemPizzaChange"
+              items="{
+                path: '/Pizzas',
+                parameters: { $orderby: 'name', $$sharedRequest: true },
+                templateShareable: false
+              }"
+            >
+              <core:ListItem key="{ID}" text="{name}" additionalText="{price} {currency}" />
+            </Select>
+            <StepInput value="{newOrder>quantity}" min="1" max="50" width="100%" textAlign="End" />
+            <Button icon="sap-icon://decline" type="Transparent" tooltip="{i18n>removeItem}" press=".onRemoveOrderItem" />
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+    <beginButton>
+      <Button id="createOrderConfirmButton" text="{i18n>createOrderConfirm}" type="Emphasized" press=".onCreateOrderConfirm" />
+    </beginButton>
+    <endButton>
+      <Button id="createOrderCancelButton" text="{i18n>cancel}" press=".onCreateOrderCancel" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,56 @@
+<mvc:View
+  controllerName="pizzaflow.controller.App"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:tnt="sap.tnt"
+  displayBlock="true"
+>
+  <!-- SAP Fiori "Tool Page" layout: header on top, navigation on the left -->
+  <tnt:ToolPage id="toolPage">
+    <tnt:header>
+      <tnt:ToolHeader id="toolHeader">
+        <Button
+          id="sideNavigationToggle"
+          icon="sap-icon://menu2"
+          type="Transparent"
+          tooltip="{i18n>toggleNavigation}"
+          press=".onSideNavigationToggle"
+        >
+          <layoutData>
+            <OverflowToolbarLayoutData priority="NeverOverflow" />
+          </layoutData>
+        </Button>
+        <Title id="appTitle" text="{i18n>appTitle}" level="H1" wrapping="false">
+          <layoutData>
+            <OverflowToolbarLayoutData priority="Disappear" />
+          </layoutData>
+        </Title>
+        <Text id="appSubtitle" text="{i18n>appSubtitle}" wrapping="false">
+          <layoutData>
+            <OverflowToolbarLayoutData priority="Disappear" />
+          </layoutData>
+        </Text>
+      </tnt:ToolHeader>
+    </tnt:header>
+
+    <tnt:sideContent>
+      <tnt:SideNavigation
+        id="sideNavigation"
+        ariaLabel="{i18n>navigationLabel}"
+        selectedKey="{appView>/selectedKey}"
+        itemSelect=".onNavigationItemSelect"
+      >
+        <tnt:NavigationList id="navigationList">
+          <tnt:NavigationListItem id="navOverview" key="overview" text="{i18n>navOverview}" icon="sap-icon://home" />
+          <tnt:NavigationListItem id="navMaterials" key="materials" text="{i18n>navMaterials}" icon="sap-icon://product" />
+          <tnt:NavigationListItem id="navOrders" key="orders" text="{i18n>navOrders}" icon="sap-icon://sales-order" />
+        </tnt:NavigationList>
+      </tnt:SideNavigation>
+    </tnt:sideContent>
+
+    <tnt:mainContents>
+      <!-- The router places the pages (Overview, Materials, ...) into this App -->
+      <App id="app" />
+    </tnt:mainContents>
+  </tnt:ToolPage>
+</mvc:View>

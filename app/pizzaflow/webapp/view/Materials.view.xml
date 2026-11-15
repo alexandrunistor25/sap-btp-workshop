@@ -1,0 +1,105 @@
+<mvc:View
+  controllerName="pizzaflow.controller.Materials"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:core="sap.ui.core"
+  core:require="{ formatter: 'pizzaflow/model/formatter' }"
+>
+  <f:DynamicPage id="materialsPage" toggleHeaderOnTitleClick="false">
+    <f:title>
+      <f:DynamicPageTitle id="materialsPageTitle">
+        <f:heading>
+          <Title id="materialsTitle" text="{i18n>materialsTitle}" level="H2" />
+        </f:heading>
+        <f:expandedContent>
+          <Text id="materialsSubtitle" text="{i18n>materialsSubtitle}" />
+        </f:expandedContent>
+      </f:DynamicPageTitle>
+    </f:title>
+
+    <f:content>
+      <!--
+        The table is bound to the OData entity set /Materials.
+        UI5 sends: GET /odata/v4/store/Materials?$count=true&$orderby=name&$select=...
+        CAP's generic handler reads the data, our after-handler adds stockStatus.
+      -->
+      <Table
+        id="materialsTable"
+        ariaLabelledBy="materialsTableTitle"
+        items="{
+          path: '/Materials',
+          parameters: { $orderby: 'name', $count: true }
+        }"
+        mode="SingleSelectLeft"
+        growing="true"
+        growingThreshold="20"
+        sticky="HeaderToolbar,ColumnHeaders"
+        noDataText="{i18n>materialsNoData}"
+        selectionChange=".onSelectionChange"
+        updateFinished=".onUpdateFinished"
+      >
+        <headerToolbar>
+          <OverflowToolbar id="materialsToolbar">
+            <Title id="materialsTableTitle" text="{i18n>materialsTableTitle}" level="H2" />
+            <ToolbarSpacer />
+            <SearchField
+              id="materialSearch"
+              width="100%"
+              placeholder="{i18n>searchMaterial}"
+              tooltip="{i18n>searchMaterial}"
+              search=".onSearch"
+            >
+              <layoutData>
+                <OverflowToolbarLayoutData priority="NeverOverflow" shrinkable="true" minWidth="8rem" maxWidth="16rem" />
+              </layoutData>
+            </SearchField>
+            <Button
+              id="restockButton"
+              text="{i18n>restock}"
+              icon="sap-icon://add-product"
+              enabled="{materialsView>/hasSelection}"
+              press=".onRestockPress"
+            />
+          </OverflowToolbar>
+        </headerToolbar>
+
+        <columns>
+          <Column id="materialColumn">
+            <Text text="{i18n>material}" />
+          </Column>
+          <Column id="categoryColumn" minScreenWidth="Tablet" demandPopin="true">
+            <Text text="{i18n>category}" />
+          </Column>
+          <Column id="availableColumn" hAlign="End">
+            <Text text="{i18n>availableQuantity}" />
+          </Column>
+          <Column id="minimumColumn" hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+            <Text text="{i18n>minimumStock}" />
+          </Column>
+          <Column id="statusColumn">
+            <Text text="{i18n>stockStatus}" />
+          </Column>
+          <Column id="changedColumn" minScreenWidth="Desktop" demandPopin="true">
+            <Text text="{i18n>lastChanged}" />
+          </Column>
+        </columns>
+
+        <items>
+          <ColumnListItem>
+            <ObjectIdentifier title="{name}" text="{ID}" />
+            <Text text="{category}" />
+            <ObjectNumber number="{stockQuantity}" unit="{unitOfMeasure}" emphasized="true" />
+            <ObjectNumber number="{minimumStock}" unit="{unitOfMeasure}" emphasized="false" />
+            <ObjectStatus
+              text="{ path: 'stockStatus', formatter: 'formatter.stockStatusText.bind($controller)' }"
+              state="{ path: 'stockStatus', formatter: 'formatter.stockStatusState' }"
+              icon="{ path: 'stockStatus', formatter: 'formatter.stockStatusIcon' }"
+            />
+            <Text text="{modifiedAt}" />
+          </ColumnListItem>
+        </items>
+      </Table>
+    </f:content>
+  </f:DynamicPage>
+</mvc:View>

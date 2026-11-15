@@ -1,0 +1,18 @@
+# Dependencies are installed with `npm install` (locally) or by the
+# Cloud Foundry Node.js buildpack (during `cf push`)
+node_modules/
+
+# CAP build output and local database files (we use in-memory SQLite)
+gen/
+*.sqlite
+*.db
+
+# Local credentials / environment - never commit these
+default-env.json
+.env
+.cdsrc-private.json
+
+# Logs and OS files
+*.log
+npm-debug.log*
+.DS_Store

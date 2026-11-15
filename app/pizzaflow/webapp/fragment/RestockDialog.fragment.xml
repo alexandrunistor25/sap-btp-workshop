@@ -1,0 +1,71 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:form="sap.ui.layout.form"
+>
+  <!--
+    The dialog gets the selected material as binding context (OData model),
+    so {name} and {stockQuantity} show the material's data.
+    The entered quantity is transient UI state -> JSONModel "restock".
+  -->
+  <Dialog
+    id="restockDialog"
+    title="{i18n>restockDialogTitle}"
+    contentWidth="28rem"
+    initialFocus="restockQuantityInput"
+  >
+    <content>
+      <form:Form id="restockForm" editable="true">
+        <form:layout>
+          <form:ColumnLayout columnsM="1" columnsL="1" columnsXL="1" />
+        </form:layout>
+        <form:formContainers>
+          <form:FormContainer>
+            <form:formElements>
+              <form:FormElement label="{i18n>material}">
+                <form:fields>
+                  <Text text="{name} ({ID})" />
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>currentStock}">
+                <form:fields>
+                  <ObjectNumber number="{stockQuantity}" unit="{unitOfMeasure}" />
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>minimumStock}">
+                <form:fields>
+                  <ObjectNumber number="{minimumStock}" unit="{unitOfMeasure}" />
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement>
+                <form:label>
+                  <Label text="{i18n>replenishmentQuantity}" labelFor="restockQuantityInput" required="true" />
+                </form:label>
+                <form:fields>
+                  <Input
+                    id="restockQuantityInput"
+                    type="Number"
+                    value="{restock>/quantity}"
+                    description="{unitOfMeasure}"
+                    fieldWidth="70%"
+                    required="true"
+                    valueState="{restock>/valueState}"
+                    valueStateText="{restock>/valueStateText}"
+                    liveChange=".onRestockQuantityChange"
+                    submit=".onRestockConfirm"
+                  />
+                </form:fields>
+              </form:FormElement>
+            </form:formElements>
+          </form:FormContainer>
+        </form:formContainers>
+      </form:Form>
+    </content>
+    <beginButton>
+      <Button id="restockConfirmButton" text="{i18n>restockConfirm}" type="Emphasized" press=".onRestockConfirm" />
+    </beginButton>
+    <endButton>
+      <Button id="restockCancelButton" text="{i18n>cancel}" press=".onRestockCancel" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

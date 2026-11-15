@@ -1,0 +1,100 @@
+<mvc:View
+  controllerName="pizzaflow.controller.Orders"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:core="sap.ui.core"
+  core:require="{ formatter: 'pizzaflow/model/formatter' }"
+>
+  <f:DynamicPage id="ordersPage" toggleHeaderOnTitleClick="false">
+    <f:title>
+      <f:DynamicPageTitle id="ordersPageTitle">
+        <f:heading>
+          <Title id="ordersTitle" text="{i18n>ordersTitle}" level="H2" />
+        </f:heading>
+        <f:expandedContent>
+          <Text id="ordersSubtitle" text="{i18n>ordersSubtitle}" />
+        </f:expandedContent>
+      </f:DynamicPageTitle>
+    </f:title>
+
+    <f:content>
+      <Table
+        id="ordersTable"
+        ariaLabelledBy="ordersTableTitle"
+        items="{
+          path: '/SalesOrders',
+          parameters: { $orderby: 'createdAt desc', $count: true }
+        }"
+        growing="true"
+        growingThreshold="20"
+        sticky="HeaderToolbar,ColumnHeaders"
+        noDataText="{i18n>ordersNoData}"
+        updateFinished=".onUpdateFinished"
+      >
+        <headerToolbar>
+          <OverflowToolbar id="ordersToolbar">
+            <Title id="ordersTableTitle" text="{i18n>ordersTableTitle}" level="H2" />
+            <ToolbarSpacer />
+            <SegmentedButton
+              id="statusFilter"
+              selectedKey="ALL"
+              selectionChange=".onFilterChange"
+              tooltip="{i18n>statusFilterLabel}"
+            >
+              <items>
+                <SegmentedButtonItem id="statusFilterAll" key="ALL" text="{i18n>filterAll}" />
+                <SegmentedButtonItem id="statusFilterPending" key="PENDING" text="{i18n>filterPending}" />
+                <SegmentedButtonItem id="statusFilterConfirmed" key="CONFIRMED" text="{i18n>filterConfirmed}" />
+              </items>
+            </SegmentedButton>
+            <SearchField
+              id="orderSearch"
+              width="100%"
+              placeholder="{i18n>searchOrder}"
+              tooltip="{i18n>searchOrder}"
+              search=".onFilterChange"
+            >
+              <layoutData>
+                <OverflowToolbarLayoutData priority="NeverOverflow" shrinkable="true" minWidth="8rem" maxWidth="14rem" />
+              </layoutData>
+            </SearchField>
+            <Button id="createOrderButton" text="{i18n>createOrder}" icon="sap-icon://add" press=".onCreateOrderPress" />
+          </OverflowToolbar>
+        </headerToolbar>
+
+        <columns>
+          <Column id="orderNumberColumn">
+            <Text text="{i18n>salesOrder}" />
+          </Column>
+          <Column id="orderDateColumn" minScreenWidth="Tablet" demandPopin="true">
+            <Text text="{i18n>createdOn}" />
+          </Column>
+          <Column id="orderItemsColumn" hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+            <Text text="{i18n>items}" />
+          </Column>
+          <Column id="orderStatusColumn">
+            <Text text="{i18n>status}" />
+          </Column>
+          <Column id="orderAmountColumn" hAlign="End">
+            <Text text="{i18n>totalAmount}" />
+          </Column>
+        </columns>
+
+        <items>
+          <ColumnListItem type="Navigation" press=".onOrderPress">
+            <ObjectIdentifier title="{orderNumber}" />
+            <Text text="{createdAt}" />
+            <Text text="{itemCount}" />
+            <ObjectStatus
+              text="{ path: 'status', formatter: 'formatter.orderStatusText.bind($controller)' }"
+              state="{ path: 'status', formatter: 'formatter.orderStatusState' }"
+              icon="{ path: 'status', formatter: 'formatter.orderStatusIcon' }"
+            />
+            <ObjectNumber number="{totalAmount}" unit="{currency}" emphasized="true" />
+          </ColumnListItem>
+        </items>
+      </Table>
+    </f:content>
+  </f:DynamicPage>
+</mvc:View>

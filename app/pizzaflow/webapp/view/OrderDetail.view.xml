@@ -1,0 +1,180 @@
+<mvc:View
+  controllerName="pizzaflow.controller.OrderDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:uxap="sap.uxap"
+  xmlns:form="sap.ui.layout.form"
+  xmlns:core="sap.ui.core"
+  core:require="{ formatter: 'pizzaflow/model/formatter' }"
+>
+  <!--
+    SAP Fiori Object Page for ONE sales order.
+    The controller binds the whole view to /SalesOrders(<ID>), so all
+    relative bindings like {orderNumber} or {items} refer to that order.
+  -->
+  <uxap:ObjectPageLayout id="orderObjectPage" upperCaseAnchorBar="false" showFooter="false">
+    <uxap:headerTitle>
+      <uxap:ObjectPageDynamicHeaderTitle id="orderHeaderTitle">
+        <uxap:breadcrumbs>
+          <Breadcrumbs id="orderBreadcrumbs">
+            <Link id="breadcrumbOrders" text="{i18n>navOrders}" press=".onNavigateToOrders" />
+          </Breadcrumbs>
+        </uxap:breadcrumbs>
+        <uxap:heading>
+          <Title id="orderTitle" text="{orderNumber}" level="H2" wrapping="true" />
+        </uxap:heading>
+        <uxap:expandedContent>
+          <Text id="orderTypeExpanded" text="{i18n>salesOrder}" />
+        </uxap:expandedContent>
+        <uxap:snappedContent>
+          <ObjectStatus
+            id="orderStatusSnapped"
+            text="{ path: 'status', formatter: 'formatter.orderStatusText.bind($controller)' }"
+            state="{ path: 'status', formatter: 'formatter.orderStatusState' }"
+            icon="{ path: 'status', formatter: 'formatter.orderStatusIcon' }"
+          />
+        </uxap:snappedContent>
+        <uxap:actions>
+          <Button
+            id="confirmOrderButton"
+            text="{i18n>confirmOrder}"
+            type="Emphasized"
+            visible="{= ${path: 'status', targetType: 'any'} === 'PENDING' }"
+            press=".onConfirmOrderPress"
+          />
+        </uxap:actions>
+      </uxap:ObjectPageDynamicHeaderTitle>
+    </uxap:headerTitle>
+
+    <uxap:headerContent>
+      <FlexBox id="orderHeaderContent" wrap="Wrap" alignItems="Start">
+        <VBox id="headerAmount" class="sapUiLargeMarginEnd sapUiSmallMarginBottom">
+          <Title id="headerAmountLabel" text="{i18n>totalAmount}" level="H3" class="sapUiTinyMarginBottom" />
+          <ObjectNumber id="headerAmountValue" number="{totalAmount}" unit="{currency}" emphasized="true" class="sapMObjectNumberLarge" />
+        </VBox>
+        <VBox id="headerStatus" class="sapUiLargeMarginEnd sapUiSmallMarginBottom">
+          <Title id="headerStatusLabel" text="{i18n>status}" level="H3" class="sapUiTinyMarginBottom" />
+          <ObjectStatus
+            id="headerStatusValue"
+            text="{ path: 'status', formatter: 'formatter.orderStatusText.bind($controller)' }"
+            state="{ path: 'status', formatter: 'formatter.orderStatusState' }"
+            icon="{ path: 'status', formatter: 'formatter.orderStatusIcon' }"
+            class="sapMObjectStatusLarge"
+          />
+        </VBox>
+        <VBox id="headerCreated" class="sapUiLargeMarginEnd sapUiSmallMarginBottom">
+          <Title id="headerCreatedLabel" text="{i18n>createdOn}" level="H3" class="sapUiTinyMarginBottom" />
+          <Text id="headerCreatedValue" text="{createdAt}" />
+        </VBox>
+        <VBox id="headerItems" class="sapUiSmallMarginBottom">
+          <Title id="headerItemsLabel" text="{i18n>items}" level="H3" class="sapUiTinyMarginBottom" />
+          <Text id="headerItemsValue" text="{itemCount}" />
+        </VBox>
+      </FlexBox>
+    </uxap:headerContent>
+
+    <uxap:sections>
+      <uxap:ObjectPageSection id="itemsSection" title="{i18n>orderItemsSection}" titleUppercase="false">
+        <uxap:subSections>
+          <uxap:ObjectPageSubSection id="itemsSubSection" showTitle="false">
+            <VBox id="itemsContent">
+              <MessageStrip
+                id="pendingInfoStrip"
+                text="{i18n>orderPendingInfo}"
+                type="Information"
+                showIcon="true"
+                visible="{= ${path: 'status', targetType: 'any'} === 'PENDING' }"
+                class="sapUiSmallMarginBottom"
+              />
+              <MessageStrip
+                id="confirmedInfoStrip"
+                text="{i18n>orderConfirmedInfo}"
+                type="Success"
+                showIcon="true"
+                visible="{= ${path: 'status', targetType: 'any'} === 'CONFIRMED' }"
+                class="sapUiSmallMarginBottom"
+              />
+              <!-- Relative binding: the composition "items" of the current order -->
+              <Table id="orderItemsTable" items="{items}" noDataText="{i18n>orderItemsNoData}" ariaLabelledBy="itemsSection">
+                <columns>
+                  <Column id="itemPizzaColumn">
+                    <Text text="{i18n>pizza}" />
+                  </Column>
+                  <Column id="itemQuantityColumn" hAlign="End">
+                    <Text text="{i18n>quantity}" />
+                  </Column>
+                  <Column id="itemUnitPriceColumn" hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                    <Text text="{i18n>unitPrice}" />
+                  </Column>
+                  <Column id="itemTotalPriceColumn" hAlign="End">
+                    <Text text="{i18n>totalPrice}" />
+                  </Column>
+                </columns>
+                <items>
+                  <ColumnListItem>
+                    <!-- {pizza/name} follows the association -> UI5 adds $expand=pizza -->
+                    <ObjectIdentifier title="{pizza/name}" text="{pizza_ID}" />
+                    <ObjectNumber number="{quantity}" />
+                    <ObjectNumber number="{unitPrice}" unit="{currency}" />
+                    <ObjectNumber number="{totalPrice}" unit="{currency}" emphasized="true" />
+                  </ColumnListItem>
+                </items>
+              </Table>
+            </VBox>
+          </uxap:ObjectPageSubSection>
+        </uxap:subSections>
+      </uxap:ObjectPageSection>
+
+      <uxap:ObjectPageSection id="adminSection" title="{i18n>adminSection}" titleUppercase="false">
+        <uxap:subSections>
+          <uxap:ObjectPageSubSection id="adminSubSection" showTitle="false">
+            <form:Form id="adminForm" editable="false">
+              <form:layout>
+                <form:ColumnLayout columnsM="2" columnsL="3" columnsXL="4" />
+              </form:layout>
+              <form:formContainers>
+                <form:FormContainer id="adminCreatedContainer">
+                  <form:formElements>
+                    <form:FormElement label="{i18n>createdOn}">
+                      <form:fields>
+                        <Text text="{createdAt}" />
+                      </form:fields>
+                    </form:FormElement>
+                    <form:FormElement label="{i18n>createdBy}">
+                      <form:fields>
+                        <Text text="{createdBy}" />
+                      </form:fields>
+                    </form:FormElement>
+                  </form:formElements>
+                </form:FormContainer>
+                <form:FormContainer id="adminChangedContainer">
+                  <form:formElements>
+                    <form:FormElement label="{i18n>changedOn}">
+                      <form:fields>
+                        <Text text="{modifiedAt}" />
+                      </form:fields>
+                    </form:FormElement>
+                    <form:FormElement label="{i18n>changedBy}">
+                      <form:fields>
+                        <Text text="{modifiedBy}" />
+                      </form:fields>
+                    </form:FormElement>
+                  </form:formElements>
+                </form:FormContainer>
+                <form:FormContainer id="adminTechnicalContainer">
+                  <form:formElements>
+                    <form:FormElement label="{i18n>technicalId}">
+                      <form:fields>
+                        <Text text="{ID}" />
+                      </form:fields>
+                    </form:FormElement>
+                  </form:formElements>
+                </form:FormContainer>
+              </form:formContainers>
+            </form:Form>
+          </uxap:ObjectPageSubSection>
+        </uxap:subSections>
+      </uxap:ObjectPageSection>
+    </uxap:sections>
+  </uxap:ObjectPageLayout>
+</mvc:View>

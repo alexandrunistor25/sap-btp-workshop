@@ -1,0 +1,77 @@
+###############################################################################
+# PizzaFlow - sample OData requests
+#
+# Open this file in VS Code with the "REST Client" extension installed and
+# click "Send Request" above a request. Start the server first: npm run watch
+#
+# For the deployed app, replace the host with your Cloud Foundry URL, e.g.
+#   @host = https://pizzaflow-xyz.cfapps.us10-001.hana.ondemand.com
+###############################################################################
+
+@host = http://localhost:4004
+@service = {{host}}/odata/v4/store
+
+### 1. Service metadata - the OData contract generated from store-service.cds
+GET {{service}}/$metadata
+
+### 2. READ - all materials (CAP generic handler + our after-handler adds stockStatus)
+GET {{service}}/Materials?$select=ID,name,stockQuantity,minimumStock,unitOfMeasure,stockStatus&$orderby=name
+
+### 3. READ - materials below minimum stock ($filter comparing two properties)
+GET {{service}}/Materials?$filter=stockQuantity lt minimumStock
+
+### 4. READ - one pizza with its recipe and the materials ($expand)
+GET {{service}}/Pizzas('PZ-MARG')?$expand=recipe($expand=material($select=name,unitOfMeasure))
+
+### 5. READ - pending sales orders with their items
+GET {{service}}/SalesOrders?$filter=status eq 'PENDING'&$expand=items&$orderby=orderNumber
+
+### 6. FUNCTION - key figures of the Overview page (GET, does not change data)
+GET {{service}}/getOverview()
+
+### 7. ACTION - restock a material (bound action, POST)
+POST {{service}}/Materials('MAT-GORG')/StoreService.restockMaterial
+Content-Type: application/json
+
+{ "quantity": 1000 }
+
+### 8. ACTION with invalid input - rejected by the BEFORE handler (400)
+POST {{service}}/Materials('MAT-GORG')/StoreService.restockMaterial
+Content-Type: application/json
+
+{ "quantity": -5 }
+
+### 9. ACTION with malformed input - rejected by CAP's type check (400)
+POST {{service}}/Materials('MAT-GORG')/StoreService.restockMaterial
+Content-Type: application/json
+
+{ "quantity": "abc" }
+
+### 10. ACTION - create a sales order (unbound action); prices come from the backend
+POST {{service}}/placeOrder
+Content-Type: application/json
+
+{
+  "items": [
+    { "pizzaID": "PZ-MARG", "quantity": 2 },
+    { "pizzaID": "PZ-DIAV", "quantity": 1 }
+  ]
+}
+
+### 11. ACTION - confirm SO-1004 (enough stock -> 200, status CONFIRMED)
+POST {{service}}/SalesOrders(5a1e5000-0000-4000-8000-000000001004)/StoreService.confirmOrder
+Content-Type: application/json
+
+{}
+
+### 12. ACTION - confirm SO-1005 (not enough Gorgonzola -> 409 business error)
+POST {{service}}/SalesOrders(5a1e5000-0000-4000-8000-000000001005)/StoreService.confirmOrder
+Content-Type: application/json
+
+{}
+
+### 13. Generic write on a @readonly entity -> 405, CAP protects the data
+DELETE {{service}}/Materials('MAT-MOZZ')
+
+### 14. Health check used by Cloud Foundry
+GET {{host}}/health

@@ -1,0 +1,46 @@
+{
+  // VS Code debug configurations for the PizzaFlow workshop.
+  // Open the "Run and Debug" view (Ctrl+Shift+D / Cmd+Shift+D), pick a
+  // configuration from the dropdown and press F5.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // RECOMMENDED: starts `npm run watch` (= cds watch) with the debugger attached.
+      // cds watch runs the server in a child process; VS Code attaches to it
+      // automatically, also after every automatic restart.
+      "name": "PizzaFlow: Debug server (cds watch)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "watch"],
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": true,
+      // Do not step into Node.js or CAP framework code - only our own files
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
+    },
+    {
+      // ALTERNATIVE: first run `npx cds watch --debug` in a terminal,
+      // then start this configuration to attach to it (port 9229).
+      "name": "PizzaFlow: Attach to 'cds watch --debug'",
+      "type": "node",
+      "request": "attach",
+      "address": "127.0.0.1",
+      "port": 9229,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
+    },
+    {
+      // Runs the backend tests (npm test) with breakpoints enabled
+      "name": "PizzaFlow: Debug tests",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["test"],
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
+    }
+  ]
+}

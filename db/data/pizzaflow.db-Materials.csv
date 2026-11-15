@@ -1,0 +1,11 @@
+ID;name;category;stockQuantity;unitOfMeasure;minimumStock
+MAT-DOUGH;Pizza Dough;Dough;60;pc;20
+MAT-MOZZ;Mozzarella;Cheese;8000;g;3000
+MAT-TOMSC;Tomato Sauce;Sauce;6000;ml;2000
+MAT-PEPP;Pepperoni;Meat;1100;g;1000
+MAT-MUSH;Mushrooms;Vegetables;3000;g;1000
+MAT-HAM;Ham;Meat;900;g;1000
+MAT-BPEP;Bell Peppers;Vegetables;2000;g;800
+MAT-OLIV;Olives;Vegetables;0;g;500
+MAT-PARM;Parmesan;Cheese;350;g;300
+MAT-GORG;Gorgonzola;Cheese;150;g;500

@@ -1,0 +1,13 @@
+# Files that `cf push` does NOT upload to Cloud Foundry.
+# node_modules is installed fresh by the Node.js buildpack (npm ci, without devDependencies).
+node_modules/
+.git/
+.vscode/
+test/
+gen/
+*.sqlite
+*.db
+*.log
+default-env.json
+.env
+.DS_Store

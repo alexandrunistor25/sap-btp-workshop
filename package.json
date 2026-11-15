@@ -1,0 +1,35 @@
+{
+  "name": "pizzaflow",
+  "version": "1.0.0",
+  "description": "PizzaFlow - Pizza Restaurant Operations. A SAP CAP + SAPUI5 workshop application for SAP BTP Cloud Foundry.",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0"
+  },
+  "dependencies": {
+    "@cap-js/sqlite": "3.1.3",
+    "@sap/cds": "10.2.2"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "1.0.2",
+    "@sap/cds-dk": "10.2.1",
+    "chai": "6.3.0",
+    "chai-as-promised": "8.0.2"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "start:prod": "NODE_ENV=production cds-serve",
+    "test": "node --test"
+  },
+  "cds": {
+    "requires": {
+      "db": "sqlite:memory",
+      "auth": "dummy"
+    },
+    "log": {
+      "format": "plain"
+    }
+  }
+}
