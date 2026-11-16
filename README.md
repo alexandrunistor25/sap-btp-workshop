@@ -1,15 +1,9 @@
 # PizzaFlow — Pizza Restaurant Operations
 
-A small but complete **SAP BTP** business application for a four-hour workshop:
+A small but complete **SAP BTP** business application for our workshop:
 an **SAP CAP** (Node.js) backend with an **OData V4** service and an **SAPUI5**
 frontend in SAP Fiori style. Both run in **one Node.js process** and are
 deployed to **SAP BTP Cloud Foundry** with a single `cf push`.
-
-> [!WARNING]
-> **This application exposes unauthenticated demo business operations. It must
-> only be deployed with disposable sample data in an isolated workshop
-> environment. Do not use this configuration for production or real business
-> data.**
 
 **Quick start** (details in [section 11](#11-local-installation-guide)):
 
@@ -114,16 +108,6 @@ After the workshop you can:
 9. Deploy the application to **SAP BTP Cloud Foundry** with `cf push`.
 10. Open the app through its **public URL**, read the **application logs** and
     observe what happens on a **restart**.
-
-A possible agenda for the four hours:
-
-| Time      | Topic                                                                 |
-| --------- | --------------------------------------------------------------------- |
-| 0:00–0:30 | Setup: check tools, clone, `npm install`, `npm run watch`             |
-| 0:30–1:15 | Explore the UI, the CDS model and the OData service (sections 6–10)   |
-| 1:15–2:30 | Debugging exercises 1–4 (section 14)                                  |
-| 2:30–3:30 | Deploy to SAP BTP Cloud Foundry (sections 15–16)                      |
-| 3:30–4:00 | Logs, restart behaviour, production architecture (sections 16, 18–20) |
 
 ---
 
@@ -645,10 +629,6 @@ Open the app in Chrome or Edge and press **F12** (developer tools):
 Start the backend with **PizzaFlow: Debug server (cds watch)** (section 13) and open
 <http://localhost:4004/pizzaflow/webapp/index.html> with the developer tools (F12)
 open on the **Network** tab.
-
-> [!NOTE]
-> The line numbers refer to the files as they are in the repository. Each
-> location is marked with a `// WORKSHOP BREAKPOINT` comment directly above.
 
 ### Exercise 1 — Read material data
 
